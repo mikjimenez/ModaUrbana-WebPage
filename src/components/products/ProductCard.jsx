@@ -1,7 +1,7 @@
 import { Card, Button, Badge } from 'react-bootstrap';
 
 export default function ProductCard({ product, onAdd }) {
-    const { name, price, linkText, linkUrl, category, imageUrl } = product;
+    const { name, price, category, imageUrl, description, stock, size } = product;
 
     return (
         <Card data-testid="product-card" className="h-100 shadow-sm card-hover">
@@ -22,24 +22,26 @@ export default function ProductCard({ product, onAdd }) {
             {category && <Badge bg="secondary">{category}</Badge>}
             </div>
 
-            <Card.Text className="text-muted mb-3">
-            ${Number(price).toLocaleString('es-CL')}
+            <Card.Text className="text-muted mb-2">
+              ${Number(price).toLocaleString('es-CL')}
             </Card.Text>
 
-            {linkUrl && (
-              <Card.Link
-                href={linkUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mb-2"
-              >
-                {linkText || 'Ver más'}
-              </Card.Link>
-            )}
+            {description ? (
+              <Card.Text className="mb-2" style={{ fontSize: '0.9rem' }}>
+                {description}
+              </Card.Text>
+            ) : null}
+
+            <Card.Text className="text-muted mb-3" style={{ fontSize: '0.85rem' }}>
+              {size ? <>Talla: {size}</> : null}
+              {size && typeof stock === 'number' ? ' • ' : null}
+              {typeof stock === 'number' ? <>Stock: {stock}</> : null}
+            </Card.Text>
 
             <Button
             variant="dark"
             onClick={onAdd}
+            disabled={typeof stock === 'number' ? stock <= 0 : false}
             className="mt-auto fw-bold"
             aria-label={`Agregar ${name} al carrito`}
             style={{
@@ -54,7 +56,7 @@ export default function ProductCard({ product, onAdd }) {
               e.currentTarget.style.boxShadow = 'none';
             }}
 >
-            Agregar al Carrito
+            {typeof stock === 'number' && stock <= 0 ? 'Sin stock' : 'Agregar al Carrito'}
             </Button>
         </Card.Body>
         </Card>

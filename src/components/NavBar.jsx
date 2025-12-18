@@ -1,9 +1,10 @@
-import { Navbar, Container, Nav, Badge } from 'react-bootstrap';
+import { Navbar, Container, Nav, Badge, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { useCart } from '../context/AppContext';
+import { useAuth, useCart } from '../context/AppContext';
 
 function NavBar(){
     const { cartCount } = useCart();
+    const { isAuthed, logout } = useAuth();
     return (
     <header className="site-header">
         <Navbar expand="md" className="mb-3 border-bottom">
@@ -32,7 +33,16 @@ function NavBar(){
                     </Nav.Link>
                 </Nav>
                 
-                <Nav>
+                <Nav className="align-items-center gap-2">
+                    {isAuthed ? (
+                        <Button variant="outline-light" size="sm" onClick={logout}>
+                            Cerrar sesión
+                        </Button>
+                    ) : (
+                        <Nav.Link as={Link} to="/login" style={{ color: '#ffffff', fontStyle: 'normal' }}>
+                            INICIAR SESIÓN
+                        </Nav.Link>
+                    )}
                     <Nav.Link as={Link} to="/productos"> 
                         🛒 <Badge bg="primary" pill>{cartCount}</Badge>
                     </Nav.Link>
